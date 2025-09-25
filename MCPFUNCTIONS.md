@@ -1,20 +1,20 @@
 # MCP Functions
 
-This is a list of functions that can be used in the ROS MCP Server.
+This is a list of functions that can be used in the Brewie ROS MCP Server.
 
-## get_topics
+## get_topics 
 - **Purpose**: Retrieves the list of available topics from the robot's ROS system.
 - **Returns**: List of topics (List[Any])
 
 ## pub_twist
-not relevant for AiNex, dellited
+*Not relevant for Brewie, deleted*
 - **Purpose**: Sends movement commands to the robot by setting linear and angular velocities.
 - **Parameters**:
   - `linear`: Linear velocity (List[Any])
   - `angular`: Angular velocity (List[Any])
 
 ## pub_twist_seq
-not relevant for AiNex, dellited
+*Not relevant for Brewie, deleted*
 - **Purpose**: Sends a sequence of movement commands to the robot, allowing for multi-step motion control.
 - **Parameters**:
   - `linear`: List of linear velocities (List[Any])
@@ -22,13 +22,13 @@ not relevant for AiNex, dellited
   - `duration`: List of durations for each step (List[Any])
  
 ## sub_image -> get_image
-changed to auto open file in windows
+*Changed to auto-open file in Windows*
 - **Purpose**: Receive images from the robot's point of view or of the surrounding environment.
-- **Parameters**:
-  - `save_path`: By default, the image is saved to the ``Downloads`` folder.
+- **Parameters**: None
+- **Returns**: Image saved to `photos/environment/` directory with timestamp
 
 ## pub_jointstate
-not relevant for AiNex, dellited
+*Not relevant for Brewie, deleted*
 - **Purpose**: Publishes a custom JointState message to the `/joint_states` topic.
 - **Parameters**:
   - `name`: List of joint names (list[str])
@@ -37,23 +37,49 @@ not relevant for AiNex, dellited
   - `effort`: List of joint efforts (list[float])
 
 ## sub_jointstate
-not relevant for AiNex, dellited
+*Not relevant for Brewie, deleted*
 - **Purpose**: Subscribes to the `/joint_states` topic and returns the latest JointState message as a formatted JSON string.
 - **Returns**: JointState message (str)
 
 ## make_step
-New!
-- **Purpose**: Moving AiNex by it's kinematic module.
+*New function for Brewie*
+- **Purpose**: Move Brewie using its kinematic module.
 - **Parameters**:
-  - `x`: float(-1;1)
-  - `y`: float(-1;1)
- 
+  - `x`: float(-1.0 to 1.0) - Left/Right movement (1.0 = left, -1.0 = right)
+  - `z`: float(-1.0 to 1.0) - Forward/Backward movement (1.0 = forward, -1.0 = backward)
+- **Returns**: "one step!" confirmation message
+
+## defend
+*New function for Brewie*
+- **Purpose**: Defend against opponents by aiming and shooting.
+- **Parameters**:
+  - `rotate`: float(-1.2 to 1.2) - Horizontal aim position
+  - `UPDOWN`: float(-0.3 to 0.2) - Vertical aim position
+- **Returns**: "one less threat!" confirmation message
+
+## sniper
+*New function for Brewie*
+- **Purpose**: Autonomous target detection and shooting using AI vision.
+- **Parameters**:
+  - `targediscr`: str - Description of the target to shoot
+- **Returns**: None (executes shooting sequence)
+
+## BrewPay
+*New function for Brewie*
+- **Purpose**: Perform SOL cryptocurrency transfer using QR code detection.
+- **Parameters**:
+  - `amount`: float - Amount in SOL to transfer
+- **Returns**: Transfer status message
+
 ## run_action
-New!
-- **Purpose**: Launch pre-prepared actions in the AiNex application
+*New function for Brewie*
+- **Purpose**: Launch pre-prepared actions in the Brewie application.
 - **Parameters**:
-  - `action_name`: str.
- 
+  - `action_name`: str - Name of the action to execute (without .d6a extension)
+- **Returns**: Action execution result
+
 ## get_available_actions
-- **Purpose**: Retrieves the list of available pre-prepared actions.
-- **Returns**: List of action files from ActionGroups (List[Str])
+*New function for Brewie*
+- **Purpose**: Retrieves the list of available pre-prepared actions from ActionGroups.
+- **Parameters**: None
+- **Returns**: List of available action names (List[str])

@@ -190,3 +190,7 @@ audio_out/*
 audio_in/*
 
 master_sh/master_voice
+robot_en_raspberry-pi_v3_0_0.ppn
+Brewie_en_windows_v3_0_0.ppn
+Brewie_en_raspberry-pi_v3_0_0.ppn
+Ai-Nex_en_windows_v3_0_0.ppn

@@ -252,7 +252,7 @@ def transfer_sol(to_address, amount, private_key):
         return False, f"Critical error during transfer execution: {str(e)}"
 
 
-mcp = FastMCP("ros-mcp-server")
+mcp = FastMCP("brewie-mcp-server")
 actions_groups_data: dict[str, str] = None
 
 

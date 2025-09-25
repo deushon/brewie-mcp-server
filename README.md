@@ -1,81 +1,81 @@
-Форк https://github.com/lpigeon/ros-mcp-server
+Fork of https://github.com/lpigeon/ros-mcp-server
 
-Переработан функционал под специфику робота AiNex
+Functionality redesigned for Brewie robot specifics
 
-# AiNex под управлением LLM
+# Brewie under LLM Control
 
-Превращаем робота в понятный и доступный инструмент с помощью MCP  сервера!
+Transform your robot into an understandable and accessible tool with MCP server!
 
-## Ключевые обновления
+## Key Updates
 
-### Обновлен способ подключения к ROS.
-Исправлены ошибки с вызовами методов подключения через WEB-socet.
-Web-socet менеджер переписан на основе библиотеки roslibPY через стандартные методы, например
+### Updated ROS Connection Method
+Fixed errors with connection method calls through WebSocket.
+WebSocket manager rewritten based on roslibPY library using standard methods, for example:
 ```python
 topic = roslibpy.Topic( self.ws, topic, topic_data_type )
 ```
-Вместо обычного сетевого взаимодействия в оригинале через JSON
+Instead of regular network interaction in the original through JSON:
 ```python
 # Ensure message is JSON serializable
 json_msg = json.dumps(message)
-self.ws.send(json_msg)
+self.ws.send(json_msg) 
 ```
-### Добавлен голосовой агент для бесшовного управления.
-Голосовой агент вынесен в отдельный питон файл – voice_agent.py для запуска как на самом роботе, так и на отдельной станции.
+### Added Voice Agent for Seamless Control
+Voice agent extracted into a separate Python file – voice_agent.py for running both on the robot itself and on a separate station.
 
-Выполнено обучение активации по голосой команде “AiNex” с помощью Porcupine Wake Word Python API. Подготовлены модели для запуска на ПК под Windows и на Raspbery PI5 робота:
-* Ai-Nex_en_raspberry-pi_v3_0_0.ppn
-* Ai-ex_en_windows_v3_0_0.ppn
+Voice command activation training completed for "Brewie" using Porcupine Wake Word Python API. Models prepared for running on Windows PC and Raspberry PI5 robot:
+* Brewie_en_raspberry-pi_v3_0_0.ppn
+* Brewie_en_windows_v3_0_0.ppn
 
-При сборке укажите подходящую для выбранной платформы.
+When building, specify the appropriate model for your chosen platform.
 
-Wake Word обеспечивает оперативную реакцию на обращение к роботу с минимум ресурсов.
+Wake Word provides quick response to robot interaction with minimal resources.
 
-После активации, производится запись и распознавание обращения к роботу через пакет SpeechRecognition
+After activation, recording and recognition of robot interaction is performed through the SpeechRecognition package.
 
-Далее, текстовая интерпретация запроса пользователя передается в LLM. Предварительно формируется системный промт и опционально сохраняется история чата для контекста (фалг history_active). Голосовое распознавание может быть отключено и выбран режим текстового чата через флаг text_input (true для выключения голосового ввода).
+Next, the text interpretation of the user's request is passed to the LLM. A system prompt is pre-formed and chat history is optionally saved for context (history_active flag). Voice recognition can be disabled and text chat mode selected through the text_input flag (true to disable voice input).
 
-Работа с LLM осуществляется через API together (https://together.ai/), может быть выбрана любая доступная для вашего API ключа модель.
+LLM work is performed through the Together API (https://together.ai/), any model available for your API key can be selected.
 
-Озвучивание ответов реализовано через gTTS.
+Response voicing is implemented through gTTS.
 
-Для уменьшения времени задержки, добавлено кэширование уже озвученных ранее ответов в рамках сессии.
-Проводится проверка хэша ответа LLM и в случае наличия такого в кэше воспроизводится локальная запись.
+To reduce delay time, caching of previously voiced responses within the session has been added.
+LLM response hash checking is performed and in case of such in cache, local recording is played.
 
-### MCP передает в контекст LLM созданные в родном приложении AiNex Action group файлы.
-Теперь LLM может получить доступ к ранее созданным в редакторе файлам с действиями робота (ActionGroups) и вызывать их в соответствии с контекстом. Для этого реализован инструмент в MCP сервере get_available_actions()
-Подробное описание добавленных и измененных функций находится в MCPFUNCTIONS.md
+### MCP passes Brewie native application Action group files to LLM context.
+Now LLM can access previously created files with robot actions (ActionGroups) in the editor and call them according to context. For this, a tool is implemented in the MCP server get_available_actions()
+Detailed description of added and modified functions is in MCPFUNCTIONS.md
 
-Важно давать подготовленным действиям понятные именна, дял адекватног овосприятия контекста LLM. Если сделат ьвсе правильно, ИИ сможет вызвать нужное действие по описанию или по ситуации, не требуя от пользователя точного названия.
+It's important to give prepared actions clear names for adequate LLM context perception. If done correctly, AI will be able to call the right action by description or situation, without requiring the user to know the exact name.
 
-## Вам понадобятся API ключи!
+## You'll Need API Keys!
 
-Для https://together.ai/ и https://console.picovoice.ai/ (быстрая активация голосом). К счастью их можно получить бесплатно зарегистрировавшись на сайтах.
+For https://together.ai/ and https://console.picovoice.ai/ (quick voice activation). Fortunately, they can be obtained for free by registering on the sites.
 
-Ключи передаются через переменные окружения во время запуска.
+Keys are passed through environment variables during startup.
 
-## Быстрый старт
+## Quick Start
 
-Запустите на роботе файл ROS/action\_groups.py для публикации актуальных действий, сначала на робота потом в docker
+Run the ROS/action\_groups.py file on the robot to publish current actions, first on the robot then in docker
 
 ```bash
-docker cp action_groups.py ainex:/home/ubuntu/ros_ws/src
+docker cp action_groups.py brewie:/home/ubuntu/ros_ws/src
 ```
 
-Теперь на роботе или ПК разверните MCP сервер (ПК должен находиться в 1 сети с роботом или придется подключить к роботу микрофон. При необходимости поправьте ROS IP для работы по сети.
+Now deploy the MCP server on the robot or PC (PC must be on the same network as the robot or you'll need to connect a microphone to the robot. If necessary, adjust the ROS IP for network operation.
 
-MCP общается с агентом через STDIO, поэтому достаточно вызвать голосового агента, он сам запустит сервер.
+MCP communicates with the agent through STDIO, so it's enough to call the voice agent, it will start the server itself.
 
-Для удобства установки пакетов используется UV
+UV is used for convenient package installation
 
-Чтобы запустить все используйте шаблонный bat file добавив в него ваши API ключи
+To run everything, use the template bat file adding your API keys to it
 
 ```bash
-set TOGETHER_API_KEY=Ваш ключ
-set WAKEUP_API_KEY=Ваш ключ
+set TOGETHER_API_KEY=Your key
+set WAKEUP_API_KEY=Your key
 uv run voice_agent.py
 ```
 
-При 1 запуске установятся необходимые пакеты
+On first run, necessary packages will be installed
 
-Теперь вы готовы открыть вашего робота по новому с LLM!
+Now you're ready to experience your robot in a new way with LLM!
